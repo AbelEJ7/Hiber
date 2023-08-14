@@ -12,143 +12,183 @@ import FilterNeeds from '../model/MarketOfficer/filterdata.model.js';
 import { validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
-import { Console } from 'console';
 
-
+const position = "marketofficer";
   export const MyTasks = async (req, res) => {
-    const emp_id = req.params.emp_id;
-
-      if (!emp_id) {
-        return res.json({
-          user: {},
-          error: '400',
-          message: 'Invalide User',
-        });
-      }
-
-    const tasks = `SELECT * FROM task t
-                    left join catagory c on c.cat_id = t.cat_id
-                    WHERE emp_id = :emp_id and status = 0`;
-
     try {
-      const result = await sequelize.query(tasks, {
-        replacements: { emp_id: emp_id },
-        type: sequelize.QueryTypes.SELECT,
-      });
-      console.log(result);
-      res.json({ result });
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.params.emp_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const emp_id = req.params.emp_id;
+          if (!emp_id) {
+            return res.status(400).json({
+              user: {},
+              error: '400',
+              message: 'Invalide User',
+            });
+          }
+          const tasks = `SELECT * FROM task t
+                          left join catagory c on c.cat_id = t.cat_id
+                          WHERE emp_id = :emp_id and status = 0`;
+          const result = await sequelize.query(tasks, {
+            replacements: { emp_id: emp_id },
+            type: sequelize.QueryTypes.SELECT,
+          });
+          console.log(result);
+          res.status(200).json({ result });
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:48 ~ MyTasks ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
-  export const singleTask = async (req, res) => {
-    const task_id = req.params.task_id;
-    const tasks = `CALL single_task(:task_id)`;
-    if (!task_id) {
-      return res.json({
-        user: {},
-        error: '400',
-        message: 'Task Not Found',
-      });
-    }
-                  
+  export const singleTask = async (req, res) => {  
     try {
-      const result = await sequelize.query(tasks, {
-        replacements: { task_id: task_id},
-        type: sequelize.QueryTypes.PROCEDURE,
-      });
-
-      res.json({ result });
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.params.task_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const task_id = req.params.task_id;
+          const tasks = `CALL single_task(:task_id)`;
+              if (!task_id) {
+                return res.status(404).json({
+                  user: {},
+                  error: '400',
+                  message: 'Task Not Found',
+                });
+              }
+          const result = await sequelize.query(tasks, {
+            replacements: { task_id: task_id},
+            type: sequelize.QueryTypes.PROCEDURE,
+          });
+        res.status(200).json({ result });
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:78 ~ singleTask ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
-  export const taskDetail = async (req,res)=>{
-    const cat_id = req.params.cat_id;
-    console.log("🚀 ~ file: MarketOfficer.controller.js:69 ~ taskDetail ~ cat_id:", cat_id)
-    const tasks = `SELECT t.prop_id, t.cat_id, i.item_name, i.item_id, SUM(ar.quantity) as quantity
-    FROM task t
-    LEFT JOIN proposal p ON p.prop_id = t.prop_id
-    LEFT JOIN filter_needs fn ON YEAR(fn.Date) = YEAR(p.date)
-    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-    LEFT JOIN additional_request ar ON ar.add_id = ra.req_id
-    LEFT JOIN item i ON i.item_id = ar.item_id
-    LEFT JOIN catagory c ON c.cat_id = i.cat_id
-    WHERE t.prop_id IS NOT NULL AND c.cat_id = :cat_id AND t.prop_id IS NOT NULL
-    GROUP BY t.prop_id, t.cat_id, i.item_name, i.item_id
-    
-    UNION ALL
-    
-    SELECT t.prop_id, t.cat_id, i.item_name, i.item_id, SUM(rp.quantity) as quantity
-    FROM task t
-    LEFT JOIN proposal p ON p.prop_id = t.prop_id
-    LEFT JOIN filter_needs fn ON YEAR(fn.Date) = YEAR(p.date)
-    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-    LEFT JOIN replacement rp ON rp.rep_id = ra.req_id
-    LEFT JOIN item i ON i.item_id = rp.item_id
-    LEFT JOIN catagory c ON c.cat_id = i.cat_id
-    WHERE t.prop_id IS NOT NULL AND c.cat_id = :cat_id AND t.prop_id IS NOT NULL
-    GROUP BY t.prop_id, t.cat_id, i.item_name, i.item_id`;
-                  
+  export const taskDetail = async (req,res)=>{         
     try {
-      const result = await sequelize.query(tasks, {
-        replacements: { cat_id: cat_id},
-        type: sequelize.QueryTypes.SELECT,
-      });
-      res.status(200).json({ result });
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.params.cat_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const cat_id = req.params.cat_id;
+          const tasks = `SELECT t.prop_id, t.cat_id, i.item_name, i.item_id, SUM(ar.quantity) as quantity
+          FROM task t
+          LEFT JOIN proposal p ON p.prop_id = t.prop_id
+          LEFT JOIN filter_needs fn ON YEAR(fn.Date) = YEAR(p.date)
+          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+          LEFT JOIN additional_request ar ON ar.add_id = ra.req_id
+          LEFT JOIN item i ON i.item_id = ar.item_id
+          LEFT JOIN catagory c ON c.cat_id = i.cat_id
+          WHERE t.prop_id IS NOT NULL AND c.cat_id = :cat_id AND t.prop_id IS NOT NULL
+          GROUP BY t.prop_id, t.cat_id, i.item_name, i.item_id
+          
+          UNION ALL
+          
+          SELECT t.prop_id, t.cat_id, i.item_name, i.item_id, SUM(rp.quantity) as quantity
+          FROM task t
+          LEFT JOIN proposal p ON p.prop_id = t.prop_id
+          LEFT JOIN filter_needs fn ON YEAR(fn.Date) = YEAR(p.date)
+          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+          LEFT JOIN replacement rp ON rp.rep_id = ra.req_id
+          LEFT JOIN item i ON i.item_id = rp.item_id
+          LEFT JOIN catagory c ON c.cat_id = i.cat_id
+          WHERE t.prop_id IS NOT NULL AND c.cat_id = :cat_id AND t.prop_id IS NOT NULL
+          GROUP BY t.prop_id, t.cat_id, i.item_name, i.item_id`;
+          
+          const result = await sequelize.query(tasks, {
+            replacements: { cat_id: cat_id},
+            type: sequelize.QueryTypes.SELECT,
+          });
+          res.status(200).json({ result });
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:127 ~ taskDetail ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   }
 
   export const doneTasks = async (req, res) => {
-    const user_id = req.body.user_id;
-    
-    const tasks = `select * from task where status = 1 and emp_id = ${user_id}`;
-  
     try {
-      const result =await sequelize.query(tasks, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-  
-      res.json(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.params.user_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const user_id = req.params.user_id;
+          const tasks = `select * from task where status = 1 and emp_id = ${user_id}`;
+          const result =await sequelize.query(tasks, {
+            type: Sequelize.QueryTypes.SELECT,
+          });
+         res.status(200).json(result);
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:145 ~ doneTasks ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
   export const generatedocument = async(req,res)=>{
-  const getDocument = `
-    SELECT a.add_id as request_id, b.branch_name, b.branch_id, fn.filter_req_app,
-      a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' AS purpose,
-      a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
-    FROM filter_needs fn
-    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-    LEFT JOIN additional_request a ON ra.req_id = a.add_id
-    LEFT JOIN item i ON a.item_id = i.item_id
-    LEFT JOIN user us ON a.user_id = us.user_id
-    LEFT JOIN branch b ON us.branch_id = b.branch_id
-    WHERE ra.req_app_id IS NOT NULL
-    UNION ALL
-    SELECT r.rep_id as request_id, b.branch_name, b.branch_id, fn.filter_req_app,
-      r.user_id, i.item_name, i.item_id, i.price, r.quantity, 'Replacement' AS purpose,
-      r.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
-    FROM filter_needs fn
-    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-    LEFT JOIN replacement r ON ra.req_id = r.rep_id
-    LEFT JOIN item i ON r.item_id = i.item_id
-    LEFT JOIN user us ON r.user_id = us.user_id
-    LEFT JOIN branch b ON us.branch_id = b.branch_id
-    WHERE ra.req_app_id IS NOT NULL;`;
-
       try {
-        const result = await sequelize.query(getDocument, {
-          type: sequelize.QueryTypes.SELECT,
-        });
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+            }
+            const getDocument = `
+        SELECT a.add_id as request_id, b.branch_name, b.branch_id, fn.filter_req_app,
+          a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' AS purpose,
+          a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
+        FROM filter_needs fn
+        LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+        LEFT JOIN additional_request a ON ra.req_id = a.add_id
+        LEFT JOIN item i ON a.item_id = i.item_id
+        LEFT JOIN user us ON a.user_id = us.user_id
+        LEFT JOIN branch b ON us.branch_id = b.branch_id
+        WHERE ra.req_app_id IS NOT NULL
+        UNION ALL
+        SELECT r.rep_id as request_id, b.branch_name, b.branch_id, fn.filter_req_app,
+          r.user_id, i.item_name, i.item_id, i.price, r.quantity, 'Replacement' AS purpose,
+          r.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
+        FROM filter_needs fn
+        LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+        LEFT JOIN replacement r ON ra.req_id = r.rep_id
+        LEFT JOIN item i ON r.item_id = i.item_id
+        LEFT JOIN user us ON r.user_id = us.user_id
+        LEFT JOIN branch b ON us.branch_id = b.branch_id
+                  WHERE ra.req_app_id IS NOT NULL;`;
+            const result = await sequelize.query(getDocument, {
+              type: sequelize.QueryTypes.SELECT,
+            });
 
-        res.json({ result });
+            res.status(200).json({ result });
       } catch (error) {
         res.json({ message: error.message });
       }
@@ -157,68 +197,106 @@ import { Console } from 'console';
 
   export const setprice = async (req, res) => {
     try {
-      const { item_id, price } = req.body;
-  
-      const [updatedRows] = await Item.update(
-        { price: price },
-        { where: { item_id: item_id } }
-      );
-  
-      if (updatedRows > 0) {
-        res.status(200).json({
-            error: "200",
-           message: "Price Updated", row: updatedRows });
-      } else {
-        res.json({
-            error: "400",
-           message: "Item not found" });
-      }
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.body.item_id === null || req.body.price) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const { item_id, price } = req.body;
+          const [updatedRows] = await Item.update(
+            { price: price },
+            { where: { item_id: item_id } }
+          );
+      
+          if (updatedRows > 0) {
+            res.status(200).json({
+                error: "200",
+              message: "Price Updated", row: updatedRows });
+          } else {
+            res.status(400).json({
+                error: "400",
+                message: "Item not found" });
+            }
     } catch (error) {
-      console.log(error);
-      res.json({ error: "200", message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:226 ~ setprice ~ error:", error)
+      res.status(400).json({ error: "400", message: error.message });
     }
   };
   
   export const updateCatagory = async(req,res)=>{
     try {
-      const { cat_id, cata_Name } = req.params;
-  
-      const result = await Category.update(
-        { cata_Name },
-        { where: { cat_id } }
-      );
-  
-      if (result[0] > 0) {
-        res.status(200).json({ message: 'Category Updated' });
-      } else {
-        res.json({ message: 'No rows updated' });
-      }
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+
+          if (req.params.cata_Name === null || req.params.cat_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const { cat_id, cata_Name } = req.params;
+          const result = await Category.update(
+            { cata_Name },
+            { where: { cat_id } }
+          );
+          if (result[0] > 0) {
+            res.status(200).json({ message: 'Category Updated' });
+          } else {
+            res.status(400).json({ message: 'No rows updated' });
+          }
     } catch (error) {
-      console.log(error);
+      console.log("🚀 ~ file: MarketOfficer.controller.js:246 ~ updateCatagory ~ error:", error)
       res.status(400).json({ error: '400', message: error.message });
     }
   };
 
   export const updateItem = async(req,res)=>{
       try {
-        const { item_id, item_name } = req.params;
-        const result = await Item.update(
-          { item_name: item_name },
-          { where: { item_id: item_id } }
-        );
-        if (result[0] > 0) {
-          res.json({ message: 'Item Updated' });
-        } else {
-          res.json({ message: 'Item not found' });
-        }
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+            }
+            if (req.params.item_id === null || req.params.item_name === null) {
+              res.status(400).json({message: "Prameter missing"})
+            }
+            const { item_id, item_name } = req.params;
+            const result = await Item.update(
+              { item_name: item_name },
+              { where: { item_id: item_id } }
+            );
+            if (result[0] > 0) {
+              res.status(200).json({ message: 'Item Updated' });
+            } else {
+              res.status(404).json({ message: 'Item not found' });
+            }
       } catch (error) {
-        console.log(error);
-        res.json({ error: '400', message: error.message });
+        console.log("🚀 ~ file: MarketOfficer.controller.js:283 ~ updateItem ~ error:", error)
+        res.status(400).json({ error: '400', message: error.message });
       }
   };
 
   export const quarterPrice = async(req,res)=>{
-      const quarterPrice =  `  SELECT i.cat_id, c.cata_Name, r.time_of_purchase AS quarter, i.cat_id AS item_cat_id,
+      
+      try {
+              const tokenvalidate = validateToken(req.headers,position);
+              const valid = tokenvalidate.split('.')[0];
+              const status = tokenvalidate.split('.')[1];
+              const message = tokenvalidate.split('.')[2];
+              if(!valid){
+                res.status(status).json({ error: message });
+              }
+
+              const quarterPrice =  `  SELECT i.cat_id, c.cata_Name, r.time_of_purchase AS quarter, i.cat_id AS item_cat_id,
                               fn.filter_req_app,ra.req_app_id,ra.req_status,r.rep_id,ra.req_id,i.item_id,i.price
                               FROM filter_needs fn 
                               LEFT JOIN request_approve ra on fn.filter_req_app = ra.req_app_id
@@ -235,32 +313,41 @@ import { Console } from 'console';
                               LEFT JOIN additional_request a on ra.req_id = a.add_id
                               LEFT JOIN item i on a.item_id = i.item_id
                               LEFT JOIN catagory c on c.cat_id = i.cat_id`;
-      try {
-          const result = await sequelize.query(quarterPrice, {
-          type: sequelize.QueryTypes.SELECT
-        });
-        res.json({ result });
+              const result = await sequelize.query(quarterPrice, {
+              type: sequelize.QueryTypes.SELECT
+            });
+            res.status(200).json({ result });
       } catch (error) {
-        res.json({ message: error.message });
+        console.log("🚀 ~ file: MarketOfficer.controller.js:321 ~ quarterPrice ~ error:", error)
+        res.status(400).json({ message: error.message });
       }
   }
 
   export const filterdata = async (req, res) => {
-   // const filter = req.body; // Change 'filters' to 'filter'
-    const {user_id,filter_req_app } = req.body;
-    const filter = {
-      user_id,
-      filter_req_app,
-      Date: new Date(),
-    };
-  
     try {
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.body.user_id === null || req.body.filter_req_app === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const {user_id,filter_req_app } = req.body;
+          const filter = {
+            user_id,
+            filter_req_app,
+            Date: new Date(),
+          };
         const filters = await FilterNeeds.create(filter)
         if(filters){
-          res.json({"message": "Filter Success"});
+          res.status(200).json({"message": "Filter Success"});
         }
     } catch (error) {
-      res.json({
+      console.log("🚀 ~ file: MarketOfficer.controller.js:341 ~ filterdata ~ error:", error)
+      res.status(400).json({
         "error": error.message
       })
     }

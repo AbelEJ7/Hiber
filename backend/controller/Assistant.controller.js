@@ -1,61 +1,71 @@
 import { ReplacementRequest,AdditionalRequest } from '../model/Asisttant/Request.model.js';
 import sequelize from '../connection/database.js';
+import { validateToken } from './TokenValidator.js';
+
+const position = "assistant";
 
 export const requests = async (req, res, next) => {
     try {
-
-      if(req.body.table == null  || req.body.user_id == null ||req.body.time_of_purchase == null
-        ||  req.body.item_id == null ){
-          return;
-      }
-
-      const { user_id, table, item_id, quantity, time_of_purchase, title_of_post, 
-        other_reason, tag_no, service_year, frequency_of_rep, book_value } = req.body;
-        
-      let model;
-
-      if (table === 'replacement') {
-          console.log(req.body);
-
-        if(req.body.tag_no == null || req.body.service_year == null || req.body.frequency_of_rep == null || req.body.book_value == null){
-         return;
-       }
-        model = ReplacementRequest;
-
-      } 
-
-      else if (table === 'additional_request') {
-        if(req.body.title_of_post == null || req.body.other_reason == null || req.body.quantity == null){
-        return;
-      }
-        model = AdditionalRequest;
-      } else {
-        throw new Error(`Invalid table type: ${table}`);
-      }
-
-      const request = await model.create({
-        user_id,
-        item_id,
-        quantity,
-        time_of_purchase,
-        title_of_post,
-        other_reason,
-        tag_no,
-        service_year,
-        frequency_of_rep,
-        book_value,
-      }, {
-        fields: ['user_id', 'item_id', 'quantity', 
-        'time_of_purchase', 'title_of_post', 
-        'other_reason', 'tag_no', 'service_year', 
-        'frequency_of_rep', 'book_value'],
-      });
-
-      res.status(200).json({
-        message: `Successfully created ${table} request with ID ${request.id}`,
-        error: "200",
-        request_id: request.id,
-      });
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            console.log("requests: ",req.body);
+            if(!valid){
+              res.status(status).json({ error: message });
+            }
+            else{
+              if(req.body.table == null  || req.body.user_id == null ||req.body.time_of_purchase == null
+                ||  req.body.item_id == null ){
+                  res.status(400).json({message: "Prameter missing"})
+              }
+      
+              const { user_id, table, item_id, quantity, time_of_purchase, title_of_post, 
+                other_reason, tag_no, service_year, frequency_of_rep, book_value } = req.body;
+              
+            let model;
+      
+            if (table === 'replacement') {
+              if(req.body.tag_no == null || req.body.service_year == null || req.body.frequency_of_rep == null || req.body.book_value == null){
+                res.status(400).json({message: "Prameter missing"})
+             }
+              model = ReplacementRequest;
+      
+            } 
+      
+            else if (table === 'additional_request') {
+              if(req.body.title_of_post == null || req.body.other_reason == null || req.body.quantity == null){
+                res.status(400).json({message: "Prameter missing"});
+            }
+              model = AdditionalRequest;
+            } else {
+              throw new Error(`Invalid table type: ${table}`);
+            }
+      
+            const request = await model.create({
+              user_id,
+              item_id,
+              quantity,
+              time_of_purchase,
+              title_of_post,
+              other_reason,
+              tag_no,
+              service_year,
+              frequency_of_rep,
+              book_value,
+            }, {
+              fields: ['user_id', 'item_id', 'quantity', 
+              'time_of_purchase', 'title_of_post', 
+              'other_reason', 'tag_no', 'service_year', 
+              'frequency_of_rep', 'book_value'],
+            });
+      
+            res.status(200).json({
+              message: `Successfully created ${table} request with ID ${request.id}`,
+              error: "200",
+              request_id: request.id,
+            });
+          }
     } catch (error) {
       console.log("Request Error:", error);
       next(error);
@@ -67,8 +77,17 @@ export const requests = async (req, res, next) => {
 
 export const approveRequest = async (req, res) => {
   try {
-        if(req.params == null){
-          return
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+
+        if(req.params.user_id == null){
+          res.status(400).json({message: "Prameter missing"})
         }
         let Assistant_id = req.params.user_id;
       
@@ -102,7 +121,7 @@ export const approveRequest = async (req, res) => {
           replacements: { assistant_id: Assistant_id },
           type: sequelize.QueryTypes.SELECT
         });
-        res.status(200).send({
+        res.status(200).json({
           result
         });
   } catch (error) {
@@ -115,8 +134,17 @@ export const approveRequest = async (req, res) => {
 
 export const waitingReequest = async (req, res) => {
   try {
-        if(req.params == null){
-          return
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+
+        if(req.params.user_id == null){
+          res.status(400).json({message: "Prameter missing"})
         }
         const Assistant_id = req.params.user_id;
         const ApproveQuery = `SELECT ra.req_id AS request_id, 

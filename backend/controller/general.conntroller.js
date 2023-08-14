@@ -2,16 +2,28 @@ import sequelize from '../connection/database.js';
 import { User } from '../model/Auth/Auth.model.js';
 import { sendEmail } from './MarketOfficer.controller.js';
 import md5 from "md5";
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 
-
+dotenv.config({path: 'connections.env'});
   export const branch = async(req,res,next)=>{
       try {
-        const branchQuery = "select Branch_id,Branch_Name from branch";
-        const branch = await sequelize.query(branchQuery, {
-          type: sequelize.QueryTypes.SELECT,
-        });
-        res.send(branch);
+            const secreteKey = process.env.ACCESS_TOKEN_SECRET;
+            const token = req.headers.authorization.split(' ')[1]; // Get token from header
+            const decodedToken = jwt.verify(token,secreteKey);
+            console.log("🚀 ~ file: general.conntroller.js:15 ~ branch ~ decodedToken:", decodedToken.position)
+            
+            if(decodedToken.position !== "admin"){
+              res.status(403).json({ error: 'access_denied', message: 'You do not have permission to access this resource' });
+            }else{
+                const branchQuery = "select Branch_id,Branch_Name from branch";
+                const branch = await sequelize.query(branchQuery, {
+                type: sequelize.QueryTypes.SELECT,
+              });
+              res.status(200).json(branch);
+            }
+            
       } catch (error) {
         console.log("/branch=>",error);
         next(error);
@@ -96,6 +108,7 @@ import md5 from "md5";
 
   export const items = async(req,res)=>{
     try {
+      console.log(req.headers);
       console.log("items")
       const itemQuery = "select item_id,item_name,c.cat_id,cata_Name,price from item i left join catagory c on c.cat_id = i.cat_id";
       const items = await sequelize.query(itemQuery,{type: sequelize.QueryTypes.SELECT});
