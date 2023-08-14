@@ -2,29 +2,29 @@ import {Router} from 'express';
 import multer from "multer";
 import { BidRegister, FinancialForm, GetBidPdf, MyDocument, Mytenders, 
     SetFinancial, TenderNews, uploadsTechnical } from '../controller/Supplier.controller.js';
-import { GetBid } from '../controller/MarketOfficer.controller.js';
-
+import verifyToken from '../verifyToken.js';
+import {sanitizeRequestData} from '../controller/RemoveSpecialCharacters.js';
 
 const router = Router();
 
 const upload = multer({dest: "./uploads/"});
 
-router.get("/tendernews",TenderNews);
+router.get("/tendernews",verifyToken,sanitizeRequestData,TenderNews);
 
-router.get("/mydocument/:bid_id",MyDocument);
+router.get("/mydocument/:bid_id",verifyToken,sanitizeRequestData,MyDocument);
 
-router.post("/tendernews/register",BidRegister);
+router.post("/tendernews/register",verifyToken,sanitizeRequestData,BidRegister);
 
-router.get("/mytender/:sup_id",Mytenders);
+router.get("/mytender/:sup_id",verifyToken,sanitizeRequestData,Mytenders);
 
-router.get("/mytender/financialform/:bid_id",FinancialForm);
+router.get("/mytender/financialform/:bid_id",verifyToken,sanitizeRequestData,FinancialForm);
 
-router.post("/mytender/technicalform",upload.single("file"),uploadsTechnical)
+router.post("/mytender/technicalform",upload.single("file"),verifyToken,sanitizeRequestData,uploadsTechnical)
 
-router.post("/mytender/financialform",SetFinancial);
+router.post("/mytender/financialform",verifyToken,sanitizeRequestData,SetFinancial);
 
-router.post("/mytender/financialform/:sup_id",SetFinancial);
+router.post("/mytender/financialform/:sup_id",verifyToken,sanitizeRequestData,SetFinancial);
 
-router.get("/bid-download/:bid_file",GetBidPdf);
+router.get("/bid-download/:bid_file",verifyToken,sanitizeRequestData,GetBidPdf);
 
 export default router;

@@ -11,14 +11,15 @@ import { ApprovedProposals, BidInitialize, EvaluateTechnicalDocument,
         setWinner, 
         setprice, singleTask, taskDetail, technicalDetail, updateBid, updateCatagory, updateItem, uploadBidDocument 
   } from '../controller/MarketOfficer.controller.js';
-  
   import multer from "multer";
-
+  import verifyToken from '../verifyToken.js';
+  import {sanitizeRequestData} from '../controller/RemoveSpecialCharacters.js';
+  
   const upload = multer({dest: "./uploads/"});  
   const router = Router();
 
 
-  router.get("/mytasks/:emp_id",MyTasks);
+  router.get("/mytasks/:emp_id",verifyToken,sanitizeRequestData,MyTasks);
 
   router.get("/singletask/:cat_id/:date",singleTask);
 

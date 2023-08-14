@@ -354,184 +354,234 @@ const position = "marketofficer";
   };
   
   export const filtered_data= async (req, res) => {
-        const { cat_id } = req.params;
-        let getFilteredData = `SELECT a.add_id as request_id, b.branch_name, b.branch_id,
-            a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' 
-            as purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status FROM filter_needs fn
-            LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-            LEFT JOIN additional_request a ON a.add_id = ra.req_id 
-            JOIN item i ON a.item_id = i.item_id 
-            JOIN user us ON a.user_id = us.user_id 
-            JOIN branch b ON us.branch_id = b.branch_id WHERE i.cat_id = ?
-            UNION 
-            SELECT r.rep_id as request_id, b.branch_name, b.branch_id,
-            r.user_id, i.item_name, i.item_id, i.price, r.quantity, 
-            'Replacement' as purpose, r.time_of_purchase, ra.req_app_id, 
-            ra.user_id, ra.req_status FROM filter_needs fn
-            LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-            LEFT JOIN replacement r ON r.rep_id = ra.req_id 
-            JOIN item i ON r.item_id = i.item_id 
-            JOIN user us ON r.user_id = us.user_id
-            JOIN branch b ON us.branch_id = b.branch_id WHERE i.cat_id = ? ORDER BY branch_name`;
-
+        
         try {
-          if (cat_id == -1) {
-            getFilteredData = `SELECT a.add_id as request_id, b.branch_name, b.branch_id,
-                                a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' 
-                                as purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status FROM filter_needs fn
-                                LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-                                LEFT JOIN additional_request a ON a.add_id = ra.req_id 
-                                JOIN item i ON a.item_id = i.item_id 
-                                JOIN user us ON a.user_id = us.user_id 
-                                JOIN branch b ON us.branch_id = b.branch_id
-                                UNION 
-                                SELECT r.rep_id as request_id, b.branch_name, b.branch_id,
-                                r.user_id, i.item_name, i.item_id, i.price, r.quantity, 
-                                'Replacement' as purpose, r.time_of_purchase, ra.req_app_id, 
-                                ra.user_id, ra.req_status FROM filter_needs fn
-                                LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-                                LEFT JOIN replacement r ON r.rep_id = ra.req_id 
-                                JOIN item i ON r.item_id = i.item_id 
-                                JOIN user us ON r.user_id = us.user_id
-                                JOIN branch b ON us.branch_id = b.branch_id ORDER BY branch_name`;
-          }
-          
-          const result = await sequelize.query(getFilteredData, {
-            replacements: [cat_id, cat_id],
-            type: QueryTypes.SELECT,
-          });
-          
-          res.status(200).json({ result });
+              const tokenvalidate = validateToken(req.headers,position);
+              const valid = tokenvalidate.split('.')[0];
+              const status = tokenvalidate.split('.')[1];
+              const message = tokenvalidate.split('.')[2];
+              if(!valid){
+                res.status(status).json({ error: message });
+              }
+              if (req.params.cat_id === null) {
+                res.status(400).json({message: "Prameter missing"})
+              }
+              const { cat_id } = req.params;
+                      let getFilteredData = `SELECT a.add_id as request_id, b.branch_name, b.branch_id,
+                          a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' 
+                          as purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status FROM filter_needs fn
+                          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                          LEFT JOIN additional_request a ON a.add_id = ra.req_id 
+                          JOIN item i ON a.item_id = i.item_id 
+                          JOIN user us ON a.user_id = us.user_id 
+                          JOIN branch b ON us.branch_id = b.branch_id WHERE i.cat_id = ?
+                          UNION 
+                          SELECT r.rep_id as request_id, b.branch_name, b.branch_id,
+                          r.user_id, i.item_name, i.item_id, i.price, r.quantity, 
+                          'Replacement' as purpose, r.time_of_purchase, ra.req_app_id, 
+                          ra.user_id, ra.req_status FROM filter_needs fn
+                          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                          LEFT JOIN replacement r ON r.rep_id = ra.req_id 
+                          JOIN item i ON r.item_id = i.item_id 
+                          JOIN user us ON r.user_id = us.user_id
+                          JOIN branch b ON us.branch_id = b.branch_id WHERE i.cat_id = ? ORDER BY branch_name`;
+              if (cat_id == -1) {
+                getFilteredData = `SELECT a.add_id as request_id, b.branch_name, b.branch_id,
+                                    a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' 
+                                    as purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status FROM filter_needs fn
+                                    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                                    LEFT JOIN additional_request a ON a.add_id = ra.req_id 
+                                    JOIN item i ON a.item_id = i.item_id 
+                                    JOIN user us ON a.user_id = us.user_id 
+                                    JOIN branch b ON us.branch_id = b.branch_id
+                                    UNION 
+                                    SELECT r.rep_id as request_id, b.branch_name, b.branch_id,
+                                    r.user_id, i.item_name, i.item_id, i.price, r.quantity, 
+                                    'Replacement' as purpose, r.time_of_purchase, ra.req_app_id, 
+                                    ra.user_id, ra.req_status FROM filter_needs fn
+                                    LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                                    LEFT JOIN replacement r ON r.rep_id = ra.req_id 
+                                    JOIN item i ON r.item_id = i.item_id 
+                                    JOIN user us ON r.user_id = us.user_id
+                                    JOIN branch b ON us.branch_id = b.branch_id ORDER BY branch_name`;
+              }
+              
+              const result = await sequelize.query(getFilteredData, {
+                replacements: [cat_id, cat_id],
+                type: QueryTypes.SELECT,
+              });
+              
+              res.status(200).json({ result });
         } catch (error) {
-          res.json({ message: error.message });
+          console.log("🚀 ~ file: MarketOfficer.controller.js:416 ~ constfiltered_data= ~ error:", error)
+          res.status(400).json({ message: error.message });
         }
     };
 
-  export const filter_documnet = async (req, res) => {
-    const getDocumnet = `
-      SELECT a.add_id AS request_id, b.branch_name, b.branch_id,
-        a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' AS purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
-      FROM request_approve ra
-      LEFT JOIN additional_request a ON a.add_id = ra.req_id 
-      JOIN item i ON a.item_id = i.item_id 
-      JOIN user us ON a.user_id = us.user_id 
-      JOIN branch b ON us.branch_id = b.branch_id 
-      WHERE ra.req_status = 'Approve'
-      AND NOT EXISTS (
-        SELECT 1
-        FROM filter_needs fn
-        WHERE fn.filter_req_app = ra.req_app_id
-      )
-      UNION 
-      SELECT r.rep_id AS request_id, b.branch_name, b.branch_id,
-        r.user_id, i.item_name, i.item_id, i.price, r.quantity, 'Replacement' AS purpose, r.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
-      FROM request_approve ra
-      LEFT JOIN replacement r ON r.rep_id = ra.req_id 
-      JOIN item i ON r.item_id = i.item_id 
-      JOIN user us ON r.user_id = us.user_id
-      JOIN branch b ON us.branch_id = b.branch_id 
-      WHERE ra.req_status = 'Approve'
-      AND NOT EXISTS (
-        SELECT 1
-        FROM filter_needs fn
-        WHERE fn.filter_req_app = ra.req_app_id
-      )
-      ORDER BY branch_id`;
-  
+  export const filter_documnet = async (req, res) => {  
     try {
-      const result = await sequelize.query(getDocumnet, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-  
-      res.json({ result });
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+
+          const getDocumnet = `
+          SELECT a.add_id AS request_id, b.branch_name, b.branch_id,
+            a.user_id, i.item_name, i.item_id, i.price, a.quantity, 'Additional' AS purpose, a.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
+          FROM request_approve ra
+          LEFT JOIN additional_request a ON a.add_id = ra.req_id 
+          JOIN item i ON a.item_id = i.item_id 
+          JOIN user us ON a.user_id = us.user_id 
+          JOIN branch b ON us.branch_id = b.branch_id 
+          WHERE ra.req_status = 'Approve'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM filter_needs fn
+            WHERE fn.filter_req_app = ra.req_app_id
+          )
+          UNION 
+          SELECT r.rep_id AS request_id, b.branch_name, b.branch_id,
+            r.user_id, i.item_name, i.item_id, i.price, r.quantity, 'Replacement' AS purpose, r.time_of_purchase, ra.req_app_id, ra.user_id, ra.req_status
+          FROM request_approve ra
+          LEFT JOIN replacement r ON r.rep_id = ra.req_id 
+          JOIN item i ON r.item_id = i.item_id 
+          JOIN user us ON r.user_id = us.user_id
+          JOIN branch b ON us.branch_id = b.branch_id 
+          WHERE ra.req_status = 'Approve'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM filter_needs fn
+            WHERE fn.filter_req_app = ra.req_app_id
+          )
+          ORDER BY branch_id`;
+          const result = await sequelize.query(getDocumnet, {
+            type: Sequelize.QueryTypes.SELECT,
+          });
+      
+          res.status(200).json({ result });
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:459 ~ constfilter_documnet= ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
   export const generateProposal = async (req, res) => {
-    const user_id = req.body.user_id;
-    const prop_title = "proposal for "+new Date().getFullYear();
-    console.log(user_id)
-    const propos = `INSERT INTO proposal (user_id,title, total_price)
-                SELECT :user_id, :prop_title, SUM(subquery.total_price) AS total_price
-                FROM (
-                  SELECT fn.Date, SUM(ar.quantity * i.price) AS total_price
-                  FROM filter_needs fn
-                  LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-                  LEFT JOIN additional_request ar ON ar.add_id = ra.req_id
-                  LEFT JOIN item i ON i.item_id = ar.item_id
-                  WHERE YEAR(fn.Date) = YEAR(CURDATE())
-                  GROUP BY fn.Date
+    
+    try { 
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+            }
+            if (req.body.user_id === null) {
+              res.status(400).json({message: "Prameter missing"})
+            }
+            const user_id = req.body.user_id;
+            const prop_title = "proposal for "+new Date().getFullYear();
+            const propos = `INSERT INTO proposal (user_id,title, total_price)
+                        SELECT :user_id, :prop_title, SUM(subquery.total_price) AS total_price
+                        FROM (
+                          SELECT fn.Date, SUM(ar.quantity * i.price) AS total_price
+                          FROM filter_needs fn
+                          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                          LEFT JOIN additional_request ar ON ar.add_id = ra.req_id
+                          LEFT JOIN item i ON i.item_id = ar.item_id
+                          WHERE YEAR(fn.Date) = YEAR(CURDATE())
+                          GROUP BY fn.Date
 
-                  UNION ALL
+                          UNION ALL
 
-                  SELECT fn.Date, SUM(rp.quantity * i.price) AS total_price
-                  FROM filter_needs fn
-                  LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
-                  LEFT JOIN replacement rp ON rp.rep_id = ra.req_id
-                  LEFT JOIN item i ON i.item_id = rp.item_id
-                  WHERE YEAR(fn.Date) = YEAR(CURDATE())
-                  GROUP BY fn.Date
-                ) AS subquery;`;
-    try {
-      await sequelize.query(propos, {
-        type: Sequelize.QueryTypes.INSERT,
-        replacements: { user_id, prop_title },
-      });
-  
-      res.json({ message: 'Insertion successful' });
+                          SELECT fn.Date, SUM(rp.quantity * i.price) AS total_price
+                          FROM filter_needs fn
+                          LEFT JOIN request_approve ra ON fn.filter_req_app = ra.req_app_id
+                          LEFT JOIN replacement rp ON rp.rep_id = ra.req_id
+                          LEFT JOIN item i ON i.item_id = rp.item_id
+                          WHERE YEAR(fn.Date) = YEAR(CURDATE())
+                          GROUP BY fn.Date
+                        ) AS subquery;`;
+            await sequelize.query(propos, {
+              type: Sequelize.QueryTypes.INSERT,
+              replacements: { user_id, prop_title },
+            });
+      res.status(200).json({ message: 'Insertion successful' });
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:513 ~ generateProposal ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
   export const getProposal = async (req, res) => {
-    const propsal = `select * from proposal`;
-  console.log("metekeal")
+    
     try {
-      const result =await sequelize.query(propsal, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-  
-      res.json(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          const propsal = `select * from proposal`;
+          const result =await sequelize.query(propsal, {
+            type: Sequelize.QueryTypes.SELECT,
+          }); 
+      res.status(200).json(result);
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:534 ~ getProposal ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   };
 
   export const ApprovedProposals = async(req,res)=>{
-
-    const approvedproposal = `select * from proposal where status = 1`;
-  
     try {
-      const result =await sequelize.query(approvedproposal, {
-        type: Sequelize.QueryTypes.SELECT,
-      });
-  
-      res.json(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          const approvedproposal = `select * from proposal where status = 1`;
+          const result =await sequelize.query(approvedproposal, {
+            type: Sequelize.QueryTypes.SELECT,
+          });
+        res.status(200).json(result);
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:554 ~ ApprovedProposals ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   }
 
   export const BidInitialize = async (req, res) => {
-    const { prop_id, user_id, cat_id} = req.body;
-    console.log(req.body);
-    const bidparams = {
-      user_id,
-      prop_id,
-      cat_id,
-      date: new Date(),
-    };
-
     try {
-      const newTask = await GenBid.create(bidparams);
-      if (newTask) {
-        res.status(200).json({ message: "Bid Initialized" });
-      }
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+          }
+          if (req.body.prop_id === null || req.body.user_id === null || req.body.cat_id === null) {
+            res.status(400).json({message: "Prameter missing"})
+          }
+          const { prop_id, user_id, cat_id} = req.body;
+          const bidparams = {
+            user_id,
+            prop_id,
+            cat_id,
+            date: new Date(),
+          };
+          const newTask = await GenBid.create(bidparams);
+          if (newTask) {
+            res.status(200).json({ message: "Bid Initialized" });
+          }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:575 ~ BidInitialize ~ error:", error)
+      res.status(400).json({ error: error.message });
     }
   };
 

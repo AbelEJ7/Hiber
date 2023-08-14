@@ -2,26 +2,22 @@ import  Jwt  from "jsonwebtoken";
 import { expressjwt } from "express-jwt";
 
 function verifyToken(req, res, next) {
-
-  const authHeader = req.headers.authorization;
-  const secret =process.env.ACCESS_TOKEN_SECRET;
-  const protect= expressjwt({ secret: secret,algorithms: ['HS256'] });
-
-  if (authHeader) {
-    const token = authHeader.split(' ')[1];
-    Jwt.verify(token, secret, (err, user) => {
-      if (err) {
-        if(err.name === 'TokenExpiredError' && err.message ==='jwt expired'){
-          console.log("expired")
-           return res.json({ message: 'Invalid token' });
-        }
-      }
-      req.user = user;
-      next();
+  const secret = process.env.ACCESS_TOKEN_SECRET;
+    const protect = expressjwt({
+        secret: secret,
+        algorithms: ['HS256'],
+        credentialsRequired: true
     });
-  } else {
-    res.status(401).json({ message: 'Authorization header missing' });
-  }
+
+    protect(req, res, (err) => {
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ message: 'Your session has expired. Please log in again.' });
+            }
+            return res.status(401).json({ message: 'Authentication error.' });
+        }
+        next();
+    });
 }
 
 export default verifyToken;
