@@ -10,14 +10,15 @@ export const requests = async (req, res, next) => {
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            console.log("requests: ",req.body);
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
             else{
               if(req.body.table == null  || req.body.user_id == null ||req.body.time_of_purchase == null
                 ||  req.body.item_id == null ){
-                  res.status(400).json({message: "Prameter missing"})
+                  res.status(400).json({message: "Prameter missing"});
+                  return;
               }
       
               const { user_id, table, item_id, quantity, time_of_purchase, title_of_post, 
@@ -27,7 +28,8 @@ export const requests = async (req, res, next) => {
       
             if (table === 'replacement') {
               if(req.body.tag_no == null || req.body.service_year == null || req.body.frequency_of_rep == null || req.body.book_value == null){
-                res.status(400).json({message: "Prameter missing"})
+                res.status(400).json({message: "Prameter missing"});
+                return;
              }
               model = ReplacementRequest;
       
@@ -36,6 +38,7 @@ export const requests = async (req, res, next) => {
             else if (table === 'additional_request') {
               if(req.body.title_of_post == null || req.body.other_reason == null || req.body.quantity == null){
                 res.status(400).json({message: "Prameter missing"});
+                return;;
             }
               model = AdditionalRequest;
             } else {
@@ -84,10 +87,12 @@ export const approveRequest = async (req, res) => {
 
           if(!valid){
             res.status(status).json({ error: message });
+return;
           }
 
         if(req.params.user_id == null){
-          res.status(400).json({message: "Prameter missing"})
+          res.status(400).json({message: "Prameter missing"});
+return;
         }
         let Assistant_id = req.params.user_id;
       
@@ -141,10 +146,12 @@ export const waitingReequest = async (req, res) => {
 
           if(!valid){
             res.status(status).json({ error: message });
+return;
           }
 
         if(req.params.user_id == null){
-          res.status(400).json({message: "Prameter missing"})
+          res.status(400).json({message: "Prameter missing"});
+return;
         }
         const Assistant_id = req.params.user_id;
         const ApproveQuery = `SELECT ra.req_id AS request_id, 

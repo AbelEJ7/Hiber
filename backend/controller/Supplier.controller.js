@@ -6,6 +6,7 @@ import sequelize from '../connection/database.js';
 import Bidreg from '../model/supplier/bid_participant.model.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {validateToken} from './TokenValidator.js';
 
 const position = "supplier";
   export const TenderNews = async(req,res)=>{
@@ -16,6 +17,7 @@ const position = "supplier";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
           const tendernews = `SELECT b.bid_title,b.bid_id,b.bid_file,b.bid_price as price,b.date FROM bid b WHERE b.bid_done = 0 AND b.publish = 1`;
           const result= await sequelize.query(tendernews, {
@@ -38,9 +40,11 @@ const position = "supplier";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.body.sup_id === null || req.body.bid_id == null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.body.sup_id == null || req.body.bid_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const {sup_id,bid_id} = req.body;
           const bidreg = {
@@ -68,9 +72,11 @@ const position = "supplier";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
-            if (req.params.sup_id === null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.params.sup_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
             }
             const sup_id = req.params.sup_id;
             const mytender = `SELECT bp.bid_participate_id,b.date,b.bid_id,bid_done,b.deadline_date,b.bid_file,b.bid_title FROM bid_participants bp
@@ -98,9 +104,11 @@ const position = "supplier";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
-            if (req.params.bid_id === null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.params.bid_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
             }
             const bid_id = req.params.bid_id;
             const financialForm = `SELECT bi.*,i.item_name FROM bid_items bi LEFT JOIN item i
@@ -127,9 +135,11 @@ const position = "supplier";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.params.bid_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.bid_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const bid_id = req.params.bid_id;
           const myDocument = `select *from bid where bid_id = :bid_id`;
@@ -154,19 +164,23 @@ const position = "supplier";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.body.file === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.file == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const { bid_participate_id, username } = req.body;
           const file = req.file;
           const size = file.size;
-          console.log("🚀 ~ file: Supplier.controller.js:163 ~ uploadsTechnical ~ size:", size)
           const fileType = mime.extension(file.mimetype);
           if (fileType !== 'pdf') {
             throw new Error('Only PDF files are allowed.');
           }
-      
+          if(size > 1000000){
+            res.status(400).json({message: "To big File it should be Maximum 3MB"});
+            return
+          }
           const oldname = file.filename;
           const newname = file.originalname;
           const timestamp = Date.now();
@@ -220,10 +234,12 @@ const position = "supplier";
               const message = tokenvalidate.split('.')[2];
               if(!valid){
                 res.status(status).json({ error: message });
+                return;
               }
-              if (req.body.price === null || req.body.bid_participate_id == null ||
+              if (req.body.price == null || req.body.bid_participate_id == null ||
                   req.body.bid_item_id == null) {
-                res.status(400).json({message: "Prameter missing"})
+                res.status(400).json({message: "Prameter missing"});
+                return;
               }
               const financialDetails = req.body; 
               const tasks = await Promise.all(
@@ -253,9 +269,11 @@ const position = "supplier";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
-            if (req.params.bid_file === null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.params.bid_file == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
             }
             const {bid_file} = req.params;
             const __filename = fileURLToPath(import.meta.url);

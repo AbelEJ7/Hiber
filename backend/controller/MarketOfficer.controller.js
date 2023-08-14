@@ -12,6 +12,7 @@ import FilterNeeds from '../model/MarketOfficer/filterdata.model.js';
 import { validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
+import {validateToken} from './TokenValidator.js';
 
 const position = "marketofficer";
   export const MyTasks = async (req, res) => {
@@ -22,9 +23,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.params.emp_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.emp_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const emp_id = req.params.emp_id;
           if (!emp_id) {
@@ -57,9 +60,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.params.task_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.task_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+             return;
           }
           const task_id = req.params.task_id;
           const tasks = `CALL single_task(:task_id)`;
@@ -89,9 +94,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.params.cat_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.cat_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const cat_id = req.params.cat_id;
           const tasks = `SELECT t.prop_id, t.cat_id, i.item_name, i.item_id, SUM(ar.quantity) as quantity
@@ -137,9 +144,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.params.user_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.user_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const user_id = req.params.user_id;
           const tasks = `select * from task where status = 1 and emp_id = ${user_id}`;
@@ -161,6 +170,7 @@ const position = "marketofficer";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
             const getDocument = `
         SELECT a.add_id as request_id, b.branch_name, b.branch_id, fn.filter_req_app,
@@ -203,9 +213,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.body.item_id === null || req.body.price) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.body.item_id == null || req.body.price) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const { item_id, price } = req.body;
           const [updatedRows] = await Item.update(
@@ -236,10 +248,12 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
 
-          if (req.params.cata_Name === null || req.params.cat_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.params.cata_Name == null || req.params.cat_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const { cat_id, cata_Name } = req.params;
           const result = await Category.update(
@@ -265,9 +279,11 @@ const position = "marketofficer";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
-            if (req.params.item_id === null || req.params.item_name === null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.params.item_id == null || req.params.item_name == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
             }
             const { item_id, item_name } = req.params;
             const result = await Item.update(
@@ -294,6 +310,7 @@ const position = "marketofficer";
               const message = tokenvalidate.split('.')[2];
               if(!valid){
                 res.status(status).json({ error: message });
+                return;
               }
 
               const quarterPrice =  `  SELECT i.cat_id, c.cata_Name, r.time_of_purchase AS quarter, i.cat_id AS item_cat_id,
@@ -331,9 +348,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.body.user_id === null || req.body.filter_req_app === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.body.user_id == null || req.body.filter_req_app == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const {user_id,filter_req_app } = req.body;
           const filter = {
@@ -362,9 +381,11 @@ const position = "marketofficer";
               const message = tokenvalidate.split('.')[2];
               if(!valid){
                 res.status(status).json({ error: message });
+                return;
               }
-              if (req.params.cat_id === null) {
-                res.status(400).json({message: "Prameter missing"})
+              if (req.params.cat_id == null) {
+                res.status(400).json({message: "Prameter missing"});
+                return;
               }
               const { cat_id } = req.params;
                       let getFilteredData = `SELECT a.add_id as request_id, b.branch_name, b.branch_id,
@@ -426,6 +447,7 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
 
           const getDocumnet = `
@@ -477,9 +499,11 @@ const position = "marketofficer";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+              return;
             }
-            if (req.body.user_id === null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.body.user_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
             }
             const user_id = req.body.user_id;
             const prop_title = "proposal for "+new Date().getFullYear();
@@ -524,6 +548,7 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+              return;
           }
           const propsal = `select * from proposal`;
           const result =await sequelize.query(propsal, {
@@ -544,6 +569,7 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
           const approvedproposal = `select * from proposal where status = 1`;
           const result =await sequelize.query(approvedproposal, {
@@ -564,9 +590,11 @@ const position = "marketofficer";
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+            return;
           }
-          if (req.body.prop_id === null || req.body.user_id === null || req.body.cat_id === null) {
-            res.status(400).json({message: "Prameter missing"})
+          if (req.body.prop_id == null || req.body.user_id == null || req.body.cat_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
           }
           const { prop_id, user_id, cat_id} = req.body;
           const bidparams = {
@@ -586,64 +614,91 @@ const position = "marketofficer";
   };
 
   export const GetBid = async(req,res)=>{
-    const user_id = req.params.user_id;
-    const approvedproposal = `select * from bid where user_id = :user_id`;
-  
     try {
-      const result =await sequelize.query(approvedproposal, {
-        replacements: {user_id: user_id},
-        type: Sequelize.QueryTypes.SELECT,
-      });
-      console.log(result)
-      res.json(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+          if (req.params.user_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          const user_id = req.params.user_id;
+          const approvedproposal = `select * from bid where user_id = :user_id`;
+          const result =await sequelize.query(approvedproposal, {
+            replacements: {user_id: user_id},
+            type: Sequelize.QueryTypes.SELECT,
+          });
+          res.status(200).json(result);
     } catch (error) {
-      res.json({ message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:608 ~ GetBid ~ error:", error)
+      res.status(400).json({ message: error.message });
     }
   }
   
   export const uploadBidDocument = async (req, res) => {
-
-    if(req.file == null || req.body == null){
-      return
-    }
-
-    const bid_id = req.body.bid_id;
-    const oldname = req.file?.filename;
-    const newname = req.file?.originalname;
-    const timestamp = Date.now();
-
-    const uniqueFilename = `${newname}_${timestamp}`;
-    const currentDate = new Date();
-    const year = currentDate.getFullYear().toString().slice(-2);
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const uploadPath = `./uploads/bids/${month}-${year}/${newname}`;
-    const uploadFolder = `./uploads/bids/${month}-${year}`;
-  
     try {
-      const result = await GenBid.update(
-        { bid_file: uniqueFilename },
-        { where: { bid_id } }
-      );
-  
-      if (result[0] > 0) {
-        if (!fs.existsSync(uploadFolder)) {
-          fs.mkdirSync(uploadFolder);
-        }
-  
-        await fs.promises.rename(`./uploads/${oldname}`, uploadPath);
-        res.status(200).json({ message: "Bid Upload Success" });
-      } else {
-        res.status(500).json({ error: "No rows updated" });
-      }
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+            if(req.file == null || req.body.bid_id == null){
+             res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          if(req.file.size > 4000000){
+            res.status(400).json({message: "Too Big file it should be maximum 4MB"})
+          }
+          const bid_id = req.body.bid_id;
+          const oldname = req.file?.filename;
+          const newname = req.file?.originalname;
+          const timestamp = Date.now();
+
+          const uniqueFilename = `${newname}_${timestamp}`;
+          const currentDate = new Date();
+          const year = currentDate.getFullYear().toString().slice(-2);
+          const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+          const uploadPath = `./uploads/bids/${month}-${year}/${newname}`;
+          const uploadFolder = `./uploads/bids/${month}-${year}`;
+          const result = await GenBid.update(
+            { bid_file: uniqueFilename },
+            { where: { bid_id } }
+          );
+      
+          if (result[0] > 0) {
+            if (!fs.existsSync(uploadFolder)) {
+              fs.mkdirSync(uploadFolder);
+            }
+      
+            await fs.promises.rename(`./uploads/${oldname}`, uploadPath);
+            res.status(200).json({ message: "Bid Upload Success" });
+          } else {
+            res.status(500).json({ error: "No rows updated" });
+          }
     } catch (error) {
-      console.error("Error while uploading the document:", error);
-      res.status(500).json({ error: "Error while uploading the document", details: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:652 ~ uploadBidDocument ~ error:", error)
+      res.status(400).json({ error: "Error while uploading the document", details: error.message });
     }
   };
   
   export const updateBid = async (req, res) => {
     try {
-  
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
             const {
               bid_id,
               bid_price,
@@ -657,76 +712,98 @@ const position = "marketofficer";
               financial_visibility,
             } = req.body;
 
-      const result = await GenBid.update(
-        {
-          bid_price,
-          tender_type,
-          deadline_date,
-          financial_open_date,
-          publish,
-          bid_title,
-          tech_visibility,
-          financial_visibility,
-          bid_done,
+            const result = await GenBid.update(
+              {
+                bid_price,
+                tender_type,
+                deadline_date,
+                financial_open_date,
+                publish,
+                bid_title,
+                tech_visibility,
+                financial_visibility,
+                bid_done,
 
-        },
-        { where: { bid_id } }
-      );
+              },
+              { where: { bid_id } }
+            );
   
-      if (result[0] > 0) {
-        if (financial_open_date != null) {
-          SedEmailForTechPass(bid_id,financial_open_date);
-        }
-        res.status(200).json({status: '200', message: 'Bid Updated' });
-      } else {
-        res.json({status: '400', message: 'Nothing Change' });
-      }
+            if (result[0] > 0) {
+              if (financial_open_date != null) {
+                SedEmailForTechPass(bid_id,financial_open_date);
+              }
+              res.status(200).json({status: '200', message: 'Bid Updated' });
+            } else {
+              res.status(400).json({status: '400', message: 'Nothing Change' });
+            }
     } catch (error) {
-      console.log(error);
-      res.json({ error: '400', message: error.message });
+      console.log("🚀 ~ file: MarketOfficer.controller.js:704 ~ updateBid ~ error:", error)
+      res.status(400).json({ error: '400', message: error.message });
     }
   };
   
   export const GetParticipants = async(req,res)=>{
-    const bid_id = req.params.bid_id;
-    const participants = `SELECT bp.bid_participate_id,s.First_Name,bp.tech_setatus,s.Last_Name,td.file_name,
-                          s.username,td.technical_id FROM bid_participants bp
-                          LEFT JOIN technical_doc td on td.bid_participate_id = bp.bid_participate_id
-                          LEFT JOIN supplier s on s.supplier_id = bp.sup_id
-                          where bid_id = :bid_id`;
+    
     try {
-     
-      const result= await sequelize.query(participants,{
-        replacements: { bid_id: bid_id },
-        type: sequelize.QueryTypes.SELECT
-      });
-      res.status(200).send(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+          if (req.params.bid_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          const bid_id = req.params.bid_id;
+          const participants = `SELECT bp.bid_participate_id,s.First_Name,bp.tech_setatus,s.Last_Name,td.file_name,
+                                s.username,td.technical_id FROM bid_participants bp
+                                LEFT JOIN technical_doc td on td.bid_participate_id = bp.bid_participate_id
+                                LEFT JOIN supplier s on s.supplier_id = bp.sup_id
+                                where bid_id = :bid_id`;
+          const result= await sequelize.query(participants,{
+            replacements: { bid_id: bid_id },
+            type: sequelize.QueryTypes.SELECT
+          });
+          res.status(200).send(result);
     } catch (error) {
-      console.error(error);
-      res.status(500).send({
+      console.log("🚀 ~ file: MarketOfficer.controller.js:734 ~ GetParticipants ~ error:", error)
+      res.status(400).send({
         message: "Error occurred while fetching proposals"
       });
     }
   }
 
-  export const technicalDetail = async(req,res)=>{
-    const {bid_id,sup_id} = req.params;
-    const participants = `SELECT td.technical_id,bp.bid_participate_id,s.First_Name,s.Last_Name,td.file_name,
-                          s.username,td.technical_id FROM bid_participants bp
-                          LEFT JOIN technical_doc td on td.bid_participate_id = bp.bid_participate_id
-                          LEFT JOIN supplier s on s.supplier_id = bp.sup_id
-                          where bid_id = :bid_id and s.supplier_id = :sup_id`;
-                          
+  export const technicalDetail = async(req,res)=>{              
     try {
-     
-      const result= await sequelize.query(participants,{
-        replacements: { bid_id: bid_id,sup_id: sup_id},
-        type: sequelize.QueryTypes.SELECT
-      });
-      res.status(200).send(result);
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+          if (req.params.bid_id == null || req.params.sup_id == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          const {bid_id,sup_id} = req.params;
+          const participants = `SELECT td.technical_id,bp.bid_participate_id,s.First_Name,s.Last_Name,td.file_name,
+                                s.username,td.technical_id FROM bid_participants bp
+                                LEFT JOIN technical_doc td on td.bid_participate_id = bp.bid_participate_id
+                                LEFT JOIN supplier s on s.supplier_id = bp.sup_id
+                                where bid_id = :bid_id and s.supplier_id = :sup_id`;
+            const result= await sequelize.query(participants,{
+              replacements: { bid_id: bid_id,sup_id: sup_id},
+              type: sequelize.QueryTypes.SELECT
+            });
+            res.status(200).send(result);
     } catch (error) {
-      console.error(error);
-      res.status(500).send({
+      console.log("🚀 ~ file: MarketOfficer.controller.js:757 ~ technicalDetail ~ error:", error)
+      res.status(400).send({
         message: "Error occurred while fetching proposals"
       });
     }
@@ -734,29 +811,38 @@ const position = "marketofficer";
 
   export const EvaluateTechnicalDocument = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        // Handle validation errors
-        return res.status(400).json({ errors: errors.array() });
-      }
-  
-      const { user_id, technical_id, evaluate_value } = req.body;
-  
-      const response = await EvaluateTechnical.create({
-        user_id: user_id,
-        technical_id: technical_id,
-        evaluate_value: evaluate_value,
-      });
-  
-      if (response) {
-        res.json({ message: "Evaluation Success" });
-      } else {
-        res.json({ message: "Evaluation Error" });
-      }
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+          if (req.body.user_id == null || req.body.technical_id == null || req.body.evaluateValue == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+          }
+          const { user_id, technical_id, evaluate_value } = req.body;
+          const response = await EvaluateTechnical.create({
+            user_id: user_id,
+            technical_id: technical_id,
+            evaluate_value: evaluate_value,
+          });
+      
+          if (response) {
+            res.status(200).json({ message: "Evaluation Success" });
+          } else {
+            res.status(400).json({ message: "Evaluation Error" });
+          }
     } catch (error) {
-      console.log(error);
-      res.json({
-        error: "200",
+      console.log("🚀 ~ file: MarketOfficer.controller.js:801 ~ EvaluateTechnicalDocument ~ error:", error)
+      res.status(400).json({
+        error: "400",
         message: error.message,
       });
     }
@@ -764,216 +850,282 @@ const position = "marketofficer";
   
   //SEND EMAIL FOR TECHNICAL PASS SUPPLIER
   export const SedEmailForTechPass = async(bid_id,financial_open_date)=>{
-    const getPassedEmails = `SELECT email,et.evaluate_value FROM bid_participants bp
-                            LEFT JOIN technical_doc td on bp.bid_participate_id = td.bid_participate_id
-                            LEFT JOIN evaluat_technical et on et.technical_id = td.technical_id
-                            LEFT JOIN supplier s on s.supplier_id = bp.sup_id 
-                            WHERE bid_id = :bid_id`;
-    const passedTechnical = [];
-    const FailTechnical = [];
-    const MissedTechnical = [];
-    
     try {
-      const response = await sequelize.query(getPassedEmails, {
-        type: sequelize.QueryTypes.SELECT,
-        replacements: {bid_id: bid_id}
-      });
-    
-      response.map(technical => {
-        const emailObject = {
-          email: technical.email,
-          evaluateValue: technical.evaluate_value
-        };
-    
-        if (technical.evaluate_value >= 70) {
-          passedTechnical.push(emailObject);
-        } else if (technical.evaluate_value < 70 && technical.evaluate_value != null) {
-          FailTechnical.push(emailObject);
-        } else {
-          MissedTechnical.push(emailObject);
-        }
-      });
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
 
-      passedTechnical.map(pass=>{
-        const recipient = pass.email;
-        const evaluateValue = pass.evaluateValue;
-        const subject = 'Congratulations! Technical Evaluation Passed';
-        const message = `Your technical evaluation (score: ${evaluateValue}) passed.\n
-                          Financial Will be Open on Date: ${financial_open_date}`;
-            sendEmail(recipient, subject, message);
-      });
+          const getPassedEmails = `SELECT email,et.evaluate_value FROM bid_participants bp
+                        LEFT JOIN technical_doc td on bp.bid_participate_id = td.bid_participate_id
+                        LEFT JOIN evaluat_technical et on et.technical_id = td.technical_id
+                        LEFT JOIN supplier s on s.supplier_id = bp.sup_id 
+                        WHERE bid_id = :bid_id`;
+          const passedTechnical = [];
+          const FailTechnical = [];
+          const MissedTechnical = [];
+          const response = await sequelize.query(getPassedEmails, {
+            type: sequelize.QueryTypes.SELECT,
+            replacements: {bid_id: bid_id}
+          });
+        
+          response.map(technical => {
+            const emailObject = {
+              email: technical.email,
+              evaluateValue: technical.evaluate_value
+            };
+        
+            if (technical.evaluate_value >= 70) {
+              passedTechnical.push(emailObject);
+            } else if (technical.evaluate_value < 70 && technical.evaluate_value != null) {
+              FailTechnical.push(emailObject);
+            } else {
+              MissedTechnical.push(emailObject);
+            }
+          });
 
-      FailTechnical.map(fail=>{
-            const recipient = fail.email;
-            const evaluateValue = fail.evaluateValue;
-            const subject = 'Technical Evaluation Failed';
-            const message = `Unfortunately, your technical evaluation (score: ${evaluateValue}) did not meet the required threshold.`;
-            sendEmail(recipient, subject, message);
-      });
+          passedTechnical.map(pass=>{
+            const recipient = pass.email;
+            const evaluateValue = pass.evaluateValue;
+            const subject = 'Congratulations! Technical Evaluation Passed';
+            const message = `Your technical evaluation (score: ${evaluateValue}) passed.\n
+                              Financial Will be Open on Date: ${financial_open_date}`;
+                sendEmail(recipient, subject, message);
+          });
 
-      MissedTechnical.map(miss=>{
-          const recipient = miss.email;
-          const subject = 'Missed Technical Evaluation';
-          const message = `You missed the technical evaluation. Please make sure to submit your evaluation in future opportunities.`;
-          sendEmail(recipient, subject, message);
-      });
+          FailTechnical.map(fail=>{
+                const recipient = fail.email;
+                const evaluateValue = fail.evaluateValue;
+                const subject = 'Technical Evaluation Failed';
+                const message = `Unfortunately, your technical evaluation (score: ${evaluateValue}) did not meet the required threshold.`;
+                sendEmail(recipient, subject, message);
+          });
+
+          MissedTechnical.map(miss=>{
+              const recipient = miss.email;
+              const subject = 'Missed Technical Evaluation';
+              const message = `You missed the technical evaluation. Please make sure to submit your evaluation in future opportunities.`;
+              sendEmail(recipient, subject, message);
+          });
 
     } catch (error) {
-      console.log(error);
+      console.log("🚀 ~ file: MarketOfficer.controller.js:873 ~ SedEmailForTechPass ~ error:", error)
     } 
   }
 
   //SEND EMAIL FOR fINANCIAL WINNER SUPPLIER
   export const SedEmailForFinancialWinner = async()=>{
-    const getPassedEmails = `SELECT w.win_id,s.email, s.First_Name,s.Last_Name,bi.item_id,fd.bid_participate_id,i.item_name,fd.price FROM winner w
+    try {
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+ 
+          const getPassedEmails = `SELECT w.win_id,s.email, s.First_Name,s.Last_Name,bi.item_id,fd.bid_participate_id,i.item_name,fd.price FROM winner w
                                   LEFT JOIN financial_detail fd ON w.finance_detail = fd.finance_id
                                   LEFT JOIN bid_participants bp ON bp.bid_participate_id = fd.bid_participate_id
                                   LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id
                                   LEFT JOIN item i ON i.item_id = bi.item_id
                                   LEFT JOIN supplier s ON s.supplier_id = bp.sup_id`;
-    const Winner = [];
-    
-    try {
-      const financial = await sequelize.query(getPassedEmails);
-    
-      financial[0].map(fincance => {
-        const emailObject = {
-          email: fincance.email,
-          item: fincance.item_name
-        };
-        Winner.push(emailObject);
-      });
+          const Winner = [];
+          const financial = await sequelize.query(getPassedEmails);
+        
+          financial[0].map(fincance => {
+            const emailObject = {
+              email: fincance.email,
+              item: fincance.item_name
+            };
+            Winner.push(emailObject);
+          });
 
-      Winner?.map(win=>{
-        const recipient = win.email;
-        const items = win.item;
-        const subject = 'Congratulations! You have Won The finanancial';
-        const message = `Your winning Itmes are ${items}`;
-              sendEmail(recipient, subject, message);
-      });
+          Winner?.map(win=>{
+            const recipient = win.email;
+            const items = win.item;
+            const subject = 'Congratulations! You have Won The finanancial';
+            const message = `Your winning Itmes are ${items}`;
+                  sendEmail(recipient, subject, message);
+          });
 
     } catch (error) {
-      console.log(error);
+      console.log("🚀 ~ file: MarketOfficer.controller.js:914 ~ SedEmailForFinancialWinner ~ error:", error)
     } 
   }
 
   export const getWinners = async(req,res)=>{
-    const bid_id = req.params.bid_id;
-    console.log("Winner: :",bid_id);
-    const winners =  `SELECT w.win_id, s.First_Name,s.Last_Name,bi.item_id,fd.bid_participate_id,i.item_name,fd.price FROM winner w
-                      LEFT JOIN financial_detail fd ON w.finance_detail = fd.finance_id
-                      LEFT JOIN bid_participants bp ON bp.bid_participate_id = fd.bid_participate_id
-                      LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id
-                      LEFT JOIN item i ON i.item_id = bi.item_id
-                      LEFT JOIN supplier s ON s.supplier_id = bp.sup_id
-                      WHERE bi.bid_id = :bid_id`;
+    
       try {
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+              return;
+            }
+            if (req.params.bid_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
+            }
+            const bid_id = req.params.bid_id;
+            const winners =  `SELECT w.win_id, s.First_Name,s.Last_Name,bi.item_id,fd.bid_participate_id,i.item_name,fd.price FROM winner w
+                              LEFT JOIN financial_detail fd ON w.finance_detail = fd.finance_id
+                              LEFT JOIN bid_participants bp ON bp.bid_participate_id = fd.bid_participate_id
+                              LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id
+                              LEFT JOIN item i ON i.item_id = bi.item_id
+                              LEFT JOIN supplier s ON s.supplier_id = bp.sup_id
+                              WHERE bi.bid_id = :bid_id`;
             const result = await sequelize.query(winners, 
             { 
               replacements: {bid_id: bid_id},
               type: sequelize.QueryTypes.SELECT });
-            res.json(result)
+            res.status(200).json(result)
       } catch (error) {
-        res.json(error);
+        console.log("🚀 ~ file: MarketOfficer.controller.js:945 ~ getWinners ~ error:", error)
+        res.status(400).json(error);
       }
   }
 
   export const ItemDetail = async(req,res)=>{
-    const {item_id,bid_id} = req.params;
-    console.log("reeuwst : ",req.params)
-    const winners =  `SELECT s.First_Name, s.Last_Name, bi.item_id, fd.bid_participate_id, i.item_name, fd.price
-    FROM financial_detail fd
-    LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id
-    LEFT JOIN item i ON i.item_id = bi.item_id
-    LEFT JOIN bid_participants bp ON bp.bid_id = bi.bid_id
-    LEFT JOIN supplier s ON s.supplier_id = bp.sup_id
-    WHERE bi.item_id = :item_id AND bp.bid_id = :bid_id
-    GROUP BY fd.bid_participate_id`
+    
       try {
-            const result = await sequelize.query(winners, 
-            { 
-              replacements: {item_id: item_id,bid_id: bid_id},
-              type: sequelize.QueryTypes.SELECT
-             });
-            res.json(result)
+              const tokenvalidate = validateToken(req.headers,position);
+              const valid = tokenvalidate.split('.')[0];
+              const status = tokenvalidate.split('.')[1];
+              const message = tokenvalidate.split('.')[2];
+              if(!valid){
+                res.status(status).json({ error: message });
+                return;
+              }
+              if (req.params.bid_id == null || req.params.item_id == null) {
+                res.status(400).json({message: "Prameter missing"});
+                return;
+              }
+                const {item_id,bid_id} = req.params;
+                const winners =  `SELECT s.First_Name, s.Last_Name, bi.item_id, fd.bid_participate_id, i.item_name, fd.price
+                FROM financial_detail fd
+                LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id
+                LEFT JOIN item i ON i.item_id = bi.item_id
+                LEFT JOIN bid_participants bp ON bp.bid_id = bi.bid_id
+                LEFT JOIN supplier s ON s.supplier_id = bp.sup_id
+                WHERE bi.item_id = :item_id AND bp.bid_id = :bid_id
+                GROUP BY fd.bid_participate_id`;
+              const result = await sequelize.query(winners, 
+              { 
+                replacements: {item_id: item_id,bid_id: bid_id},
+                type: sequelize.QueryTypes.SELECT
+              });
+              res.status(200).json(result)
       } catch (error) {
-        res.json(error);
+        console.log("🚀 ~ file: MarketOfficer.controller.js:970 ~ ItemDetail ~ error:", error)
+        res.status(400).json(error);
       }
   }
 
   export const getPublished = async(req,res)=>{
-   const user_id = req.params.user_id
-    const publish =  `select * from bid where publish = 1 and user_id = :user_id`
+  
       try {
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+              return;
+            }
+            if (req.params.user_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
+            }
+            const user_id = req.params.user_id
+            const publish =  `select * from bid where publish = 1 and user_id = :user_id`
             const result = await sequelize.query(publish, 
             { replacements: {user_id: user_id},
               type: sequelize.QueryTypes.SELECT });
-            res.json(result)
+            res.status(200).json(result)
       } catch (error) {
-        res.json(error);
+        console.log("🚀 ~ file: MarketOfficer.controller.js:993 ~ getPublished ~ error:", error)
+        res.status(400).json(error);
       }
   }
 
   export const ongoingDetail = async(req,res)=>{
-    const bid_id = req.params.bid_id
-    console.log("metekal; ",bid_id)
-     const ongoinddetail =  `select tech_visibility,financial_visiblity from bid where publish = 1 and bid_id = :bid_id`
+    
        try {
-             const result = await sequelize.query(ongoinddetail, 
-             { replacements: {bid_id: bid_id},
-               type: sequelize.QueryTypes.SELECT });
-              console.log(result);
-             res.json(result)
+            const tokenvalidate = validateToken(req.headers,position);
+            const valid = tokenvalidate.split('.')[0];
+            const status = tokenvalidate.split('.')[1];
+            const message = tokenvalidate.split('.')[2];
+            if(!valid){
+              res.status(status).json({ error: message });
+              return;
+            }
+            if (req.params.bid_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+              return;
+            }
+              const bid_id = req.params.bid_id
+              const ongoinddetail =  `select tech_visibility,financial_visiblity from bid where publish = 1 and bid_id = :bid_id`
+              const result = await sequelize.query(ongoinddetail, 
+              { replacements: {bid_id: bid_id},
+                type: sequelize.QueryTypes.SELECT });
+              res.status(200).json(result)
        } catch (error) {
-         res.json(error);
+         console.log("🚀 ~ file: MarketOfficer.controller.js:1030 ~ ongoingDetail ~ error:", error)
+         res.status(400).json(error);
        }
    }
     
   export const setWinner = async()=>{
-    const winners =  `INSERT INTO winner (finance_detail)
-                    SELECT fd.finance_id
-                    FROM financial_detail fd
-                    LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id 
-                    WHERE fd.price = (SELECT MIN(price) FROM financial_detail WHERE bid_item_id = fd.bid_item_id)`;
       try {
-             await sequelize.query(winners, 
-            { type: sequelize.QueryTypes.INSERT });
+            const winners =  `INSERT INTO winner (finance_detail)
+                        SELECT fd.finance_id
+                        FROM financial_detail fd
+                        LEFT JOIN bid_items bi ON bi.bid_item_id = fd.bid_item_id 
+                        WHERE fd.price = (SELECT MIN(price) FROM financial_detail WHERE bid_item_id = fd.bid_item_id)`;
+              await sequelize.query(winners, 
+              { type: sequelize.QueryTypes.INSERT });
       } catch (error) {
-        console.log("Error Occure")
+        console.log("🚀 ~ file: MarketOfficer.controller.js:1045 ~ setWinner ~ error:", error)
       }
   }
 
   const visibility = async () => {
     try {
-      const currentDate = new Date();
-      // Update the tech_visibility column where dead_line_date is equal to the current date
-      const result = await GenBid.update(
-        { tech_visibility: 1 },
-        {
-          where: sequelize.where(sequelize.col('deadline_date'), { [Op.lte]: currentDate }),
-          logging: false
-        }
-      );
+            const currentDate = new Date();
+            const result = await GenBid.update(
+              { tech_visibility: 1 },
+              {
+                where: sequelize.where(sequelize.col('deadline_date'), { [Op.lte]: currentDate }),
+                logging: false
+              }
+            );
 
-      const finance = await GenBid.update(
-        { financial_visiblity: 1 },
-        {
-          where: sequelize.where(sequelize.col('financial_open_date'), { [Op.lte]: currentDate }),
-          logging: false 
-        }
-      );
-  
-      if (finance[0] > 0) {
-        console.log("Financila: :,",finance[0])
-        setWinner();
-        SedEmailForFinancialWinner();
-        console.log('Financial visibility updated successfully.');
-      }
-
-      if (result[0] > 0) {
-        console.log('Tech visibility updated successfully.');
-      }
+            const finance = await GenBid.update(
+              { financial_visiblity: 1 },
+              {
+                where: sequelize.where(sequelize.col('financial_open_date'), { [Op.lte]: currentDate }),
+                logging: false 
+              }
+            );
+            if (finance[0] > 0) {
+              console.log("Financila: :,",finance[0])
+              setWinner();
+              SedEmailForFinancialWinner();
+              console.log('Financial visibility updated successfully.');
+            }
+            if (result[0] > 0) {
+              console.log('Tech visibility updated successfully.');
+            }
     } catch (error) {
+      console.log("🚀 ~ file: MarketOfficer.controller.js:1076 ~ visibility ~ error:", error)
       console.error('Error updating tech visibility:', error);
     }
   };
@@ -1008,23 +1160,35 @@ const position = "marketofficer";
 
   export const GetTechnicalPdf = async (req, res) => {
     try {
-      // Construct the absolute path to the "run.pdf" file
-      const {username,file_names} = req.params;
-      console.log("🚀 ~ file: MarketOfficer.controller.js:876 ~ GetTechnicalPdf ~ file_names:", file_names)
-      console.log("🚀 ~ file: MarketOfficer.controller.js:876 ~ GetTechnicalPdf ~ username:", username)
-      const __filename = fileURLToPath(import.meta.url);
-      const pdfFilePath = path.resolve(__filename, `../../uploads/${username}/${file_names}.pdf`)
-  
-      // Check if the file exists
-      if (!fs.existsSync(pdfFilePath)) {
-        return res.status(404).send('File not found');
-      }
-     
-      const filecontent = fs.readFileSync(pdfFilePath);
-      res.json(filecontent)
+          const tokenvalidate = validateToken(req.headers,position);
+          const valid = tokenvalidate.split('.')[0];
+          const status = tokenvalidate.split('.')[1];
+          const message = tokenvalidate.split('.')[2];
+          if(!valid){
+            res.status(status).json({ error: message });
+            return;
+          }
+          if (req.params.username == null || req.params.file_names == null) {
+            res.status(400).json({message: "Prameter missing"});
+            return;
+          }
+          const {username,file_names} = req.params;
+          const __filename = fileURLToPath(import.meta.url);
+          const splitParts = file_names.split('_');
+
+          const originname = splitParts.slice(0, -1).join('_');
+          const pdfFilePath = path.resolve(__filename, `../../uploads/${username}/${originname}`)
+      
+          // Check if the file exists
+          if (!fs.existsSync(pdfFilePath)) {
+            return res.status(404).send('File not found');
+          }
+        
+          const filecontent = fs.readFileSync(pdfFilePath);
+          res.status(200).json(filecontent)
     } catch (err) {
-      console.error('Error:', err);
-      res.status(500).send('Internal server error.');
+      console.log("🚀 ~ file: MarketOfficer.controller.js:1133 ~ GetTechnicalPdf ~ err:", err)
+      res.status(400).json({message: 'Internal server error.'});
     }
   };
 

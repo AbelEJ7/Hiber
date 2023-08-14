@@ -15,10 +15,12 @@ import { validateToken } from './TokenValidator.js';
 
             if(!valid){
               res.status(status).json({ error: message });
+return;
             }
         
               if(req.body.Branch_Name == null || req.body.District_id == null ){
-                res.status(400).json({message: "Prameter missing"})
+                res.status(400).json({message: "Prameter missing"});
+return;
               }
               const {Branch_Name,District_id} = req.body;
                 const branch = {
@@ -53,10 +55,12 @@ import { validateToken } from './TokenValidator.js';
 
             if(!valid){
               res.status(status).json({ error: message });
+return;
             }
 
               if(req.body ==null){
-                res.status(400).json({message: "Prameter missing"})
+                res.status(400).json({message: "Prameter missing"});
+return;
               }
               const {Branch_Name,District_id} = req.body;
                 const branch = {
@@ -87,6 +91,7 @@ import { validateToken } from './TokenValidator.js';
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+return;
             }
             const emps = `SELECT * from user`;
             const result= await sequelize.query(emps,{type: sequelize.QueryTypes.SELECT});
@@ -107,6 +112,7 @@ import { validateToken } from './TokenValidator.js';
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+return;
           }
         const discrict = `SELECT * from district`;
         const result= await sequelize.query(discrict,{type: sequelize.QueryTypes.SELECT});
@@ -128,13 +134,15 @@ import { validateToken } from './TokenValidator.js';
 
             if(!valid){
               res.status(status).json({ error: message });
+return;
             };
 
           if (req.body.First_Name == null || req.body.Last_Name == null || 
               req.body.position == null || req.body.branch_id == null || 
               req.body.username == null || req.body.tin_number == null || 
               req.body.email == null) {
-              res.status(400).json({message: "Prameter missing"})
+              res.status(400).json({message: "Prameter missing"});
+return;
             }
           const { First_Name, Last_Name, position, branch_id, username, 
             password, tin_number, spec, email } = req.body;
@@ -215,7 +223,8 @@ import { validateToken } from './TokenValidator.js';
 
             if (req.body.sup_id == null || req.body.user_id == null || 
                 req.body.status == null) {
-                res.status(400).json({message: "Prameter missing"})
+                res.status(400).json({message: "Prameter missing"});
+return;
               }
           const supid = req.body.sup_id;
           const aproved_by = req.body.user_id;
@@ -270,7 +279,8 @@ import { validateToken } from './TokenValidator.js';
           }
           if (req.body.sup_id == null || req.body.user_id == null || 
             req.body.status == null) {
-            res.status(400).json({message: "Prameter missing"})
+            res.status(400).json({message: "Prameter missing"});
+return;
           }
 
           const supid = req.body.sup_id;
@@ -322,6 +332,7 @@ import { validateToken } from './TokenValidator.js';
           const message = tokenvalidate.split('.')[2];
           if(!valid){
             res.status(status).json({ error: message });
+return;
           }
           const emps = `SELECT supplier_id,First_Name,Last_Name,username,status from supplier`;
           const result= await sequelize.query(emps,{type: sequelize.QueryTypes.SELECT});
@@ -342,6 +353,7 @@ import { validateToken } from './TokenValidator.js';
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+return;
             }
             const recipient = email;
             const subject = 'Congratulations! You are Registered';

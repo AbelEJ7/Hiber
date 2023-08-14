@@ -1,14 +1,15 @@
 import {Router} from 'express';
 import {  ApprovedProposal, CatagoryStatus, SetTasks, getEmployees, getnoneFiltered, proposalCatagroy } from '../controller/Director.controller.js';
-
+import verifyToken from '../verifyToken.js';
+import {sanitizeRequestData} from '../controller/RemoveSpecialCharacters.js'
 const router = Router();
 
-  router.get('/nonfilterd',getnoneFiltered);
-  router.get('/approved/proposal',ApprovedProposal);
-  router.post('/settasks',SetTasks);
-  router.get('/marketofficer',getEmployees);
-  router.get('/tasks/:prop_id',CatagoryStatus);
-  router.get('/proposal/catagory/:selectecdProposalId',proposalCatagroy);
+  router.get('/nonfilterd',verifyToken,sanitizeRequestData,getnoneFiltered);
+  router.get('/approved/proposal',verifyToken,sanitizeRequestData,ApprovedProposal);
+  router.post('/settasks',verifyToken,sanitizeRequestData,SetTasks);
+  router.get('/marketofficer',verifyToken,sanitizeRequestData,getEmployees);
+  router.get('/tasks/:prop_id',verifyToken,sanitizeRequestData,CatagoryStatus);
+  router.get('/proposal/catagory/:selectecdProposalId',verifyToken,sanitizeRequestData,proposalCatagroy);
 
   export default router;
 

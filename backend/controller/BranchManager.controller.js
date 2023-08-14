@@ -12,9 +12,11 @@ const position = "manager";
                   const message = tokenvalidate.split('.')[2];
                   if(!valid){
                     res.status(status).json({ error: message });
+                    return;
                   }
-                  if (req.params.branch_id === null) {
-                    res.status(400).json({message: "Prameter missing"})
+                  if (req.params.branch_id == null) {
+                    res.status(400).json({message: "Prameter missing"});
+                    return;
                   }
                   const branch_id = req.params.branch_id;
                   if (!branch_id) {
@@ -77,9 +79,11 @@ const position = "manager";
               const message = tokenvalidate.split('.')[2];
               if(!valid){
                 res.status(status).json({ error: message });
+return;
               }
-              if (req.body.user_id === null || req.body.requestId == null) {
-                res.status(400).json({message: "Prameter missing"})
+              if (req.body.user_id == null || req.body.requestId == null) {
+                res.status(400).json({message: "Prameter missing"});
+return;
               }
                 const requestId = req.body.requestId;
                 const man_id = req.body.user_id;
@@ -127,9 +131,11 @@ const position = "manager";
             const message = tokenvalidate.split('.')[2];
             if(!valid){
               res.status(status).json({ error: message });
+return;
             }
-            if (req.body.requestId === null || req.body.user_id == null) {
-              res.status(400).json({message: "Prameter missing"})
+            if (req.body.requestId == null || req.body.user_id == null) {
+              res.status(400).json({message: "Prameter missing"});
+return;
             }
 
             const requestId = req.body.requestId;

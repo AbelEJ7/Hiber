@@ -122,7 +122,7 @@ export const AuthLogin = async (req, res) => {
             position: userData.position,
           },
           secret,
-          { expiresIn: '15min', algorithm: 'HS256' }
+          { expiresIn: '30min', algorithm: 'HS256' }
         );
   
         res.status(200).json({
@@ -154,7 +154,7 @@ export const AuthLogin = async (req, res) => {
                 position: "supplier",
               },
               secret,
-              { expiresIn: '1min', algorithm: 'HS256' }
+              { expiresIn: '30min', algorithm: 'HS256' }
             );
       
             res.json({
