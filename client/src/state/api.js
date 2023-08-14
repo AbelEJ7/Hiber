@@ -1,12 +1,31 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
+
+const func = () => {
+  const storedState = localStorage.getItem('persist:root');
+  if (storedState) {
+    const parsedState = JSON.parse(storedState);
+    const userObject = JSON.parse(parsedState.user);
+
+    if (userObject && userObject.token) {
+      return userObject.token;
+    } else {
+      console.log("Token not found in user object.");
+      return null;
+    }
+  } else {
+    console.log("Stored state not found.");
+    return null;
+  }
+}
+
 export const api = createApi({
 
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000",
-              // headers: {
-              //   'Authorization': `Bearer ${token}`
-              // }
-             }),  //process.env.REACT_APP_BASE_URL
+              headers: {
+                'Authorization': `Bearer ${func()}`
+              }
+             }), 
         reducerPath: "adminApi",
         tagTypes: ["User","Items","Customers","Tender","Transactions","Login","Register",
         "Request","Task","Proposal","Supplier","UnitPrice","Proposal","Employee","Branch"],

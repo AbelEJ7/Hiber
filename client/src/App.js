@@ -35,6 +35,7 @@ import Employee from "pages/Admin/Employee";
 import District from "pages/Admin/District";
 import PdfReader from "components/PdfReader";
 import BidHistory from "pages/supplier/BidHistory";
+import SessionExpired from "pages/components/SessionExpired";
 
 
 
@@ -68,6 +69,7 @@ function App() {
         <Routes> 
      
             {isAuth ? ( <>
+              <Route path="/session-expired" element={<SessionExpired />} />
               {userPossition === "assistant" && (
                   <Route element={<Layout />}>
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />

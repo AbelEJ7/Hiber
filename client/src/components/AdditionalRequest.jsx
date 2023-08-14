@@ -3,12 +3,15 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useGetItemsQuery } from "state/api";
+import {useSelector} from "react-redux"
 
 const AdditionalRequest = ({handler}) => {
   const theme = useTheme();
     const isNonMobile = useMediaQuery("(min-width:600px)");
-    const {data:items,isLoding} = useGetItemsQuery();
-    console.log(items)
+
+    const {data:items,isLoding,error} = useGetItemsQuery();
+
+
     const initialValues = {
         quantity: "",
         time_of_purchase: "",
