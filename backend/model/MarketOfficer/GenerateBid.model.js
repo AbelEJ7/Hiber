@@ -27,6 +27,10 @@ import sequelize from '../../connection/database.js';
             type: DataTypes.STRING,
             allowNull: true,
         },
+        bid_upload_date: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         bid_title: {
             type: DataTypes.STRING,
             allowNull: true,

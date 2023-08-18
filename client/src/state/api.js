@@ -296,7 +296,7 @@ export const api = createApi({
         }),
 
         getPdf: build.mutation({
-          query:(bid_file) => `/bid-download/${bid_file}`,
+          query:({bid_upload_date,bid_file}) => `/bid-download/${bid_upload_date}/${bid_file}`,
               providesTags:["Tender"],
         }),
 

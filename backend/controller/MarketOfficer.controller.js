@@ -13,6 +13,7 @@ import { validationResult } from 'express-validator';
 import path from "path";
 import { fileURLToPath } from 'url';
 import {validateToken} from './TokenValidator.js';
+import mime from 'mime-types';
 
 const position = "marketofficer";
   export const MyTasks = async (req, res) => {
@@ -654,22 +655,30 @@ const position = "marketofficer";
              res.status(400).json({message: "Prameter missing"});
             return;
           }
-          if(req.file.size > 4000000){
-            res.status(400).json({message: "Too Big file it should be maximum 4MB"})
+          const file = req.file;
+          const size = file.size;
+          const fileType = mime.extension(file.mimetype);
+          if (fileType !== 'pdf') {
+            throw new Error('Only PDF files are allowed.');
+          }
+          if(size > 5000000){
+            res.status(400).json({message: "To big File it should be Maximum 5MB"});
+            return
           }
           const bid_id = req.body.bid_id;
           const oldname = req.file?.filename;
           const newname = req.file?.originalname;
           const timestamp = Date.now();
 
-          const uniqueFilename = `${newname}_${timestamp}`;
           const currentDate = new Date();
           const year = currentDate.getFullYear().toString().slice(-2);
           const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+          const uniqueFilename = `${newname}_${timestamp}`;
           const uploadPath = `./uploads/bids/${month}-${year}/${newname}`;
           const uploadFolder = `./uploads/bids/${month}-${year}`;
           const result = await GenBid.update(
-            { bid_file: uniqueFilename },
+            { bid_file: uniqueFilename,
+              bid_upload_date:  `${month}-${year}`},
             { where: { bid_id } }
           );
       

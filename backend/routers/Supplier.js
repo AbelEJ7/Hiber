@@ -25,6 +25,6 @@ router.post("/mytender/financialform",verifyToken,sanitizeRequestData,SetFinanci
 
 router.post("/mytender/financialform/:sup_id",verifyToken,sanitizeRequestData,SetFinancial);
 
-router.get("/bid-download/:bid_file",verifyToken,sanitizeRequestData,GetBidPdf);
+router.get("/bid-download/:bid_upload_date/:bid_file",verifyToken,sanitizeRequestData,GetBidPdf);
 
 export default router;

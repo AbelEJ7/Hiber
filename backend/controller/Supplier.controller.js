@@ -79,7 +79,7 @@ const position = "supplier";
               return;
             }
             const sup_id = req.params.sup_id;
-            const mytender = `SELECT bp.bid_participate_id,b.date,b.bid_id,bid_done,b.deadline_date,b.bid_file,b.bid_title FROM bid_participants bp
+            const mytender = `SELECT bp.bid_participate_id,b.date,b.bid_id,bid_done,b.deadline_date,b.bid_file,bid_upload_date,b.bid_title FROM bid_participants bp
                           LEFT JOIN bid b on b.bid_id = bp.bid_id WHERE bp.sup_id = :sup_id`;
         
             const result= await sequelize.query(mytender,{
@@ -177,7 +177,7 @@ const position = "supplier";
           if (fileType !== 'pdf') {
             throw new Error('Only PDF files are allowed.');
           }
-          if(size > 1000000){
+          if(size > 3000000){
             res.status(400).json({message: "To big File it should be Maximum 3MB"});
             return
           }
@@ -263,7 +263,7 @@ const position = "supplier";
 
   export const GetBidPdf = async (req, res) => {
     try {
-            const tokenvalidate = validateToken(req.headers,"manager");
+            const tokenvalidate = validateToken(req.headers,position);
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
@@ -271,15 +271,17 @@ const position = "supplier";
               res.status(status).json({ error: message });
               return;
             }
-            if (req.params.bid_file == null) {
+            if (req.params.bid_file == null || req.params.bid_upload_date == null) {
               res.status(400).json({message: "Prameter missing"});
               return;
             }
-            const {bid_file} = req.params;
+            const {bid_file,bid_upload_date} = req.params;
+            const folder = bid_upload_date.substring(0, 2) + '-' + bid_upload_date.substring(2);
             const __filename = fileURLToPath(import.meta.url);
-            const pdfFilePath = path.resolve(__filename, `../../uploads/bids/${bid_file}.pdf`)
-            // Check if the file exists
+            const pdfFilePath = path.resolve(__filename, `../../uploads/bids/${folder}/${bid_file}.pdf`);
+
             if (!fs.existsSync(pdfFilePath)) {
+              console.log("🚀 ~ file: Supplier.controller.js:284 ~ GetBidPdf ~ pdfFilePath:", pdfFilePath)
               return res.status(404).send('File not found');
             }
             const filecontent = fs.readFileSync(pdfFilePath);

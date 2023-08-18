@@ -18,6 +18,8 @@ import slowDown from 'express-slow-down';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import fs from 'fs';
+import https from 'https'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,10 +40,8 @@ const app = express();
 
   app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-  const PORT = process.env.PORT;
-
   app.use((err, req, res, next) => {
-  console.log("Use Error: ",err);
+  console.log("🚀 ~ file: index.js:44 ~ app.use ~ err:", err)
   if (err.name === "UnauthorizedError" && err.message === "jwt expired") {
   return res.json({
   "error": "JWT Expired",
@@ -100,6 +100,20 @@ const app = express();
 
   const host = '0.0.0.0';
 
-  app.listen(PORT, () => {
+
+  const options = {
+    key: fs.readFileSync('./connection/key.pem'),
+    cert: fs.readFileSync('./connection/cert.pem')
+  };
+  
+  const server = https.createServer(options, (req, res) => {
+    res.writeHead(200);
+    res.end('Hello, HTTPS World!');
+  });
+
+  //const PORT = process.env.PORT;
+  const PORT =443;
+  
+  server.listen(PORT, () => {
     console.log("Connected to backend.",PORT);
   });

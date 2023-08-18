@@ -68,7 +68,9 @@ const MyTender = () => {
 
  const handleReadGetDoc = async()=>{
     try {
-      const response = await GetPdf(selectedRow?.bid_file);
+    console.log("🚀 ~ file: MyTender.jsx:48 ~ handleGetDoc ~ date:", selectedRow);
+
+      const response = await GetPdf({bid_upload_date: selectedRow?.bid_upload_date,bid_file: selectedRow?.bid_file});
       const pdfData = new Uint8Array(response?.data.data); // Convert the Array to Uint8Array
       const blob = new Blob([pdfData], { type: 'application/pdf' }); // Create a Blob from the Uint8Array
   
