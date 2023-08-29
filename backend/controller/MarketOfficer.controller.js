@@ -22,7 +22,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -59,7 +59,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -93,7 +93,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -143,7 +143,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -169,7 +169,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -212,7 +212,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -247,7 +247,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -278,7 +278,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -309,7 +309,7 @@ const position = "marketofficer";
               const valid = tokenvalidate.split('.')[0];
               const status = tokenvalidate.split('.')[1];
               const message = tokenvalidate.split('.')[2];
-              if(!valid){
+              if(valid !== "true"){
                 res.status(status).json({ error: message });
                 return;
               }
@@ -347,7 +347,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -380,7 +380,7 @@ const position = "marketofficer";
               const valid = tokenvalidate.split('.')[0];
               const status = tokenvalidate.split('.')[1];
               const message = tokenvalidate.split('.')[2];
-              if(!valid){
+              if(valid !== "true"){
                 res.status(status).json({ error: message });
                 return;
               }
@@ -446,7 +446,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -498,7 +498,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -547,7 +547,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
               return;
           }
@@ -568,7 +568,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -589,7 +589,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -620,7 +620,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -647,7 +647,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -704,7 +704,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -758,7 +758,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -791,7 +791,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -824,7 +824,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -864,7 +864,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -933,7 +933,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }
@@ -975,7 +975,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -1009,7 +1009,7 @@ const position = "marketofficer";
               const valid = tokenvalidate.split('.')[0];
               const status = tokenvalidate.split('.')[1];
               const message = tokenvalidate.split('.')[2];
-              if(!valid){
+              if(valid !== "true"){
                 res.status(status).json({ error: message });
                 return;
               }
@@ -1045,7 +1045,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -1072,7 +1072,7 @@ const position = "marketofficer";
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
               return;
             }
@@ -1173,7 +1173,7 @@ const position = "marketofficer";
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
             return;
           }

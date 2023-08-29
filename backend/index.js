@@ -111,9 +111,9 @@ const app = express();
     res.end('Hello, HTTPS World!');
   });
 
-  //const PORT = process.env.PORT;
-  const PORT =443;
+  const PORT = process.env.PORT;
+  //const PORT =443;
   
-  server.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log("Connected to backend.",PORT);
   });

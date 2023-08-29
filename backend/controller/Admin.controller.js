@@ -13,7 +13,7 @@ import { validateToken } from './TokenValidator.js';
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
 
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
 return;
             }
@@ -53,7 +53,7 @@ return;
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
 
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
 return;
             }
@@ -89,7 +89,7 @@ return;
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
 return;
             }
@@ -110,7 +110,7 @@ return;
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
 return;
           }
@@ -132,7 +132,7 @@ return;
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
 
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
 return;
             };
@@ -217,7 +217,7 @@ return;
             const statu = tokenvalidate.split('.')[1];
             const messageS = tokenvalidate.split('.')[2];
 
-            if(!valid){
+            if(valid !== "true"){
               res.status(statu).json({ error: messageS });
             };
 
@@ -274,7 +274,7 @@ return;
           const valid = tokenvalidate.split('.')[0];
           const statu = tokenvalidate.split('.')[1];
           const messages = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(statu).json({ error: messages });
           }
           if (req.body.sup_id == null || req.body.user_id == null || 
@@ -330,7 +330,7 @@ return;
           const valid = tokenvalidate.split('.')[0];
           const status = tokenvalidate.split('.')[1];
           const message = tokenvalidate.split('.')[2];
-          if(!valid){
+          if(valid !== "true"){
             res.status(status).json({ error: message });
 return;
           }
@@ -351,7 +351,7 @@ return;
             const valid = tokenvalidate.split('.')[0];
             const status = tokenvalidate.split('.')[1];
             const message = tokenvalidate.split('.')[2];
-            if(!valid){
+            if(valid !== "true"){
               res.status(status).json({ error: message });
 return;
             }

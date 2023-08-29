@@ -1,4 +1,6 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+
+
 export const validateToken = (header,position) =>{
     if (!header || !header.authorization) {
         return "false.401.Authorization header missing";
